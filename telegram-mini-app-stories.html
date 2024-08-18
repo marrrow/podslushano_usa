@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Stories</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        h1, h2 {
+            color: #0088cc;
+        }
+        #story-form, #search-form, #search-results {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #006699;
+        }
+        .story-link {
+            color: #0088cc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .story-link:hover {
+            text-decoration: underline;
+        }
+        #suggestions {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion:hover {
+            background-color: #f0f2f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>People Stories</h1>
+    
+    <div id="story-form">
+        <h2>Submit a Story</h2>
+        <input type="text" id="name" placeholder="Person's Name" required>
+        <textarea id="story" placeholder="Share your story..." required></textarea>
+        <button onclick="submitStory()">Submit Story</button>
+    </div>
+
+    <div id="search-form">
+        <h2>Search Stories</h2>
+        <input type="text" id="search" placeholder="Search by name..." oninput="showSuggestions()">
+        <div id="suggestions"></div>
+        <button onclick="searchStories()">Search</button>
+    </div>
+
+    <div id="search-results"></div>
+
+    <script>
+        // Define celebrities array at the top of the script
+        const celebrities = [
+            { name: "Milla Jovovich", channelPost: "https://t.me/yourchannel/post1" },
+            { name: "Natalie Wood", channelPost: "https://t.me/yourchannel/post2" },
+            { name: "Yul Brynner", channelPost: "https://t.me/yourchannel/post3" },
+            { name: "Vladimir Nabokov", channelPost: "https://t.me/yourchannel/post4" },
+            { name: "Sergei Rachmaninoff", channelPost: "https://t.me/yourchannel/post5" },
+            { name: "Irving Berlin", channelPost: "https://t.me/yourchannel/post6" },
+            { name: "Mikhail Baryshnikov", channelPost: "https://t.me/yourchannel/post7" },
+            { name: "Gary Kasparov", channelPost: "https://t.me/yourchannel/post8" },
+            { name: "Mila Kunis", channelPost: "https://t.me/yourchannel/post9" },
+            { name: "Regina Spektor", channelPost: "https://t.me/yourchannel/post10" }
+        ];
+
+        // Initialize Telegram Web App
+        let tg = window.Telegram ? window.Telegram.WebApp : null;
+        
+        // Function to initialize the app
+        function initializeApp() {
+            if (tg) {
+                tg.expand();
+            } else {
+                console.warn("Telegram WebApp is not available. Some features may not work.");
+            }
+        }
+
+        // Call initializeApp when the document is fully loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        function submitStory() {
+            let name = document.getElementById('name').value;
+            let story = document.getElementById('story').value;
+            if (name && story) {
+                // Here you would typically send this data to your backend
+                alert('Story submitted successfully!');
+                document.getElementById('name').value = '';
+                document.getElementById('story').value = '';
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        function showSuggestions() {
+            let input = document.getElementById('search').value.toLowerCase();
+            let suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = '';
+
+            if (input.length > 0) {
+                let filteredCelebrities = celebrities.filter(celeb => 
+                    celeb.name.toLowerCase().includes(input)
+                );
+
+                filteredCelebrities.forEach(celeb => {
+                    let div = document.createElement('div');
+                    div.className = 'suggestion';
+                    div.textContent = celeb.name;
+                    div.onclick = function() {
+                        document.getElementById('search').value = celeb.name;
+                        suggestionsDiv.innerHTML = '';
+                        searchStories();
+                    };
+                    suggestionsDiv.appendChild(div);
+                });
+            }
+        }
+
+        function searchStories() {
+            let query = document.getElementById('search').value;
+            if (query) {
+                let celebrity = celebrities.find(celeb => celeb.name.toLowerCase() === query.toLowerCase());
+                if (celebrity) {
+                    let results = `<h3>Story about ${celebrity.name}</h3>
+                                   <a href="${celebrity.channelPost}" class="story-link" target="_blank">Read the full story in our channel</a>`;
+                    document.getElementById('search-results').innerHTML = results;
+                } else {
+                    document.getElementById('search-results').innerHTML = `<p>No stories found for "${query}". Why not submit one?</p>`;
+                }
+            } else {
+                alert('Please enter a search query.');
+            }
+        }
+    </script>
+</body>
+</html>
