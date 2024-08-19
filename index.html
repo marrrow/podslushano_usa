@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>People Stories</title>
+    <title>ПОДСЛУШАНО США</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -67,7 +67,7 @@
     <h1>People Stories</h1>
     
     <div id="story-form">
-        <h2>Submit a Story</h2>
+        <h2>РАССКАЗАТЬ</h2>
         <input type="text" id="name" placeholder="Person's Name" required>
         <textarea id="story" placeholder="Share your story..." required></textarea>
         <button onclick="submitStory()">Submit Story</button>
@@ -117,7 +117,7 @@
             let story = document.getElementById('story').value;
             if (name && story) {
                 // Here you would typically send this data to your backend
-                alert('Story submitted successfully!');
+                alert('ПОДСЛУШАНО! ПОСЛЕ МОДЕРАЦИИ ПОСТ БУДЕТ РАЗМЕЩЕН В КАНАЛЕ');
                 document.getElementById('name').value = '';
                 document.getElementById('story').value = '';
             } else {
